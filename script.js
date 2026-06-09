@@ -48,6 +48,7 @@ applyMode();
 // Además, con la Web Audio API mide la amplitud para encender un aura sutil
 // sincronizada con su voz. Al terminar, el video se pausa en su primer cuadro.
 let audioCtx = null, analyser = null, freqBuf = null, rafId = null, activeAudios = 0;
+let smoothLevel = 0, silenceSince = 0;   // para sincronizar el video con la voz
 const connected = new WeakSet();
 
 function ensureCtx() {
@@ -152,7 +153,8 @@ function registerBotAudio(el) {
 function startSpeaking() {
   document.body.classList.add('speaking');
   if (statusText) statusText.textContent = 'Hablando…';
-  if (bgVideo) { bgVideo.play().catch(() => {}); }  // el video está muteado: se permite reproducir
+  smoothLevel = 0; silenceSince = 0;
+  if (bgVideo) { try { bgVideo.playbackRate = 1; } catch {} bgVideo.play().catch(() => {}); }
   if (!rafId) loop();
 }
 function stopSpeaking() {
@@ -169,9 +171,28 @@ function loop() {
   analyser.getByteFrequencyData(freqBuf);
   let sum = 0;
   for (let i = 0; i < freqBuf.length; i++) sum += freqBuf[i];
-  const avg = sum / freqBuf.length / 255;        // 0..1
-  const level = Math.min(1, avg * 2.4);          // amplificado para el aura
-  document.documentElement.style.setProperty('--level', level.toFixed(3));
+  const avg = sum / freqBuf.length / 255;            // 0..1
+  const level = Math.min(1, avg * 2.4);              // amplificado
+  smoothLevel += (level - smoothLevel) * 0.4;        // suavizado (EMA)
+  document.documentElement.style.setProperty('--level', smoothLevel.toFixed(3));
+
+  // --- Sincronía con la voz ---
+  // La boca avanza al ritmo de la energía del audio y se congela en los silencios.
+  if (bgVideo) {
+    const rate = 0.55 + smoothLevel * 0.95;          // ~0.55 (suave) .. ~1.5 (enérgico)
+    try { bgVideo.playbackRate = Math.max(0.5, Math.min(1.6, rate)); } catch {}
+
+    const now = performance.now();
+    if (smoothLevel < 0.05) {                         // silencio
+      if (!silenceSince) silenceSince = now;
+      if (now - silenceSince > 170 && !bgVideo.paused) bgVideo.pause(); // congela la boca
+    } else {                                          // hay voz
+      silenceSince = 0;
+      if (bgVideo.paused && document.body.classList.contains('speaking')) {
+        bgVideo.play().catch(() => {});
+      }
+    }
+  }
 }
 
 /* ---------- Intro ---------- */
