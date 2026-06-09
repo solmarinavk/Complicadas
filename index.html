@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#ffefd6" />
+  <title>Complicadas — Tu amiga que te orienta</title>
+  <meta name="description" content="Complicadas: tu amiga de confianza para resolver dudas del día a día, incluso esos temas de los que cuesta hablar." />
+  <link rel="icon" href="assets/avatar.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- ===== Pantalla de introducción ===== -->
+  <div id="intro" class="intro">
+    <img id="introLogo" class="intro-logo" src="assets/logo.svg" alt="Complicadas" />
+    <img id="introAvatar" class="intro-avatar" src="assets/avatar.svg" alt="Avatar de Complicadas" />
+  </div>
+
+  <!-- ===== App de chat ===== -->
+  <main id="app" class="app" aria-hidden="true">
+    <header class="chat-header">
+      <img class="header-avatar" src="assets/avatar.svg" alt="Avatar de Complicadas" />
+      <div class="header-info">
+        <img class="header-logo" src="assets/logo.svg" alt="Complicadas" />
+        <span class="header-status"><span class="dot"></span> En línea</span>
+      </div>
+    </header>
+
+    <section id="messages" class="messages" aria-live="polite"></section>
+
+    <form id="composer" class="composer" autocomplete="off">
+      <input
+        id="input"
+        class="composer-input"
+        type="text"
+        placeholder="Escribe tu mensaje..."
+        aria-label="Escribe tu mensaje"
+      />
+      <button id="send" class="composer-send" type="submit" aria-label="Enviar">
+        <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+          <path fill="currentColor" d="M3 11.5 21 3l-8.5 18-2.2-7.3L3 11.5Z"/>
+        </svg>
+      </button>
+    </form>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>

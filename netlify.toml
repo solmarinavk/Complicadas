@@ -1,0 +1,18 @@
+# Configuración de Netlify para Complicadas
+
+[build]
+  # No hay build step: es un sitio estático + funciones.
+  publish = "."
+  functions = "netlify/functions"
+
+[functions]
+  # Node 18+ trae fetch global (lo usa chat.js).
+  node_bundler = "esbuild"
+
+# Headers de seguridad básicos
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "SAMEORIGIN"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"

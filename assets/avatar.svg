@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400" role="img" aria-label="Avatar de Complicadas">
+  <defs>
+    <linearGradient id="avBg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#fb2a5f"/>
+      <stop offset="100%" stop-color="#ff7b1c"/>
+    </linearGradient>
+    <clipPath id="circle"><circle cx="200" cy="200" r="200"/></clipPath>
+  </defs>
+  <g clip-path="url(#circle)">
+    <rect width="400" height="400" fill="url(#avBg)"/>
+    <!-- hair -->
+    <path d="M90 250 C70 120 130 60 200 60 C270 60 330 120 310 250 C300 200 290 150 200 150 C110 150 100 200 90 250 Z" fill="#7a1f12"/>
+    <!-- neck -->
+    <rect x="178" y="235" width="44" height="60" rx="20" fill="#f3c6a8"/>
+    <!-- face -->
+    <circle cx="200" cy="190" r="72" fill="#f8d2b5"/>
+    <!-- cheeks -->
+    <circle cx="165" cy="205" r="12" fill="#fb2a5f" opacity="0.25"/>
+    <circle cx="235" cy="205" r="12" fill="#fb2a5f" opacity="0.25"/>
+    <!-- eyes -->
+    <circle cx="176" cy="185" r="7" fill="#3a2218"/>
+    <circle cx="224" cy="185" r="7" fill="#3a2218"/>
+    <!-- smile -->
+    <path d="M178 212 Q200 230 222 212" stroke="#c0392b" stroke-width="5" fill="none" stroke-linecap="round"/>
+    <!-- shoulders -->
+    <path d="M110 400 C110 320 150 290 200 290 C250 290 290 320 290 400 Z" fill="#f50e24"/>
+  </g>
+  <circle cx="200" cy="200" r="198" fill="none" stroke="#ffffff" stroke-width="6" opacity="0.6"/>
+</svg>

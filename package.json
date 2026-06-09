@@ -1,0 +1,16 @@
+{
+  "name": "complicadas-chatbot",
+  "version": "1.0.0",
+  "description": "Chatbot Complicadas: una amiga que te orienta en dudas del dia a dia y temas tabu.",
+  "private": true,
+  "scripts": {
+    "dev": "netlify dev",
+    "start": "netlify dev"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "devDependencies": {
+    "netlify-cli": "^17.0.0"
+  }
+}
