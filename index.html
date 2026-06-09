@@ -33,13 +33,14 @@
     <section id="messages" class="messages" aria-live="polite"></section>
 
     <form id="composer" class="composer" autocomplete="off">
-      <input
+      <textarea
         id="input"
         class="composer-input"
-        type="text"
+        rows="1"
         placeholder="Escribe tu mensaje..."
         aria-label="Escribe tu mensaje"
-      />
+        enterkeyhint="send"
+      ></textarea>
       <button id="send" class="composer-send" type="submit" aria-label="Enviar">
         <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
           <path fill="currentColor" d="M3 11.5 21 3l-8.5 18-2.2-7.3L3 11.5Z"/>

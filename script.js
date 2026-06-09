@@ -9,6 +9,18 @@ const sendBtn   = document.getElementById('send');
 
 const AVATAR_SRC = 'assets/avatar.svg';
 
+/* ---------- Alto de viewport real (teclado móvil) ---------- */
+// Mantiene la app ajustada cuando el teclado aparece/desaparece en móvil.
+function setVH() {
+  const h = (window.visualViewport ? window.visualViewport.height : window.innerHeight);
+  document.documentElement.style.setProperty('--vh', `${h / 100}px`);
+}
+setVH();
+window.addEventListener('resize', setVH);
+if (window.visualViewport) {
+  window.visualViewport.addEventListener('resize', setVH);
+}
+
 // Historial de la conversación (lo que se envía al modelo).
 // El "system" lo define el backend; aquí solo guardamos user/assistant.
 const history = [];
@@ -77,6 +89,28 @@ function scrollToBottom() {
   messages.scrollTop = messages.scrollHeight;
 }
 
+/* ---------- Textarea: auto-crecer y atajos ---------- */
+function autoGrow() {
+  input.style.height = 'auto';
+  input.style.height = Math.min(input.scrollHeight, 140) + 'px';
+}
+input.addEventListener('input', autoGrow);
+
+// Enter envía; Shift+Enter hace salto de línea. En móvil táctil no forzamos
+// el envío con Enter para no entorpecer la escritura.
+input.addEventListener('keydown', (e) => {
+  const esTactil = window.matchMedia('(pointer: coarse)').matches;
+  if (e.key === 'Enter' && !e.shiftKey && !esTactil) {
+    e.preventDefault();
+    form.requestSubmit();
+  }
+});
+
+function resetInput() {
+  input.value = '';
+  input.style.height = 'auto';
+}
+
 /* ---------- Envío ---------- */
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
@@ -85,7 +119,7 @@ form.addEventListener('submit', async (e) => {
 
   addBubble(text, 'user');
   history.push({ role: 'user', content: text });
-  input.value = '';
+  resetInput();
   setSending(true);
 
   const typing = showTyping();
