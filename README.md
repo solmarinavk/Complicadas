@@ -12,6 +12,10 @@ Puedes elegir cómo conversar:
 - **Escribir** o mandar **notas de voz** (botón de micrófono).
 - **Leer** o **Escuchar** las respuestas (toggle arriba a la derecha).
 
+Tiene **efectos de sonido sutiles** (al abrir, al grabar, al enviar y al recibir),
+sintetizados en tiempo real con la Web Audio API. Se pueden silenciar con el botón
+de altavoz en la barra superior.
+
 Cuando eliges *Escuchar*, la respuesta llega como nota de voz y **un video de Mia
 hablando se reproduce de fondo** mientras suena su voz (se pausa al terminar). El
 video va silenciado: el sonido es la voz generada por OpenAI. Además, un aura sutil

@@ -13,6 +13,7 @@ const recStop   = document.getElementById('recStop');
 const recCancel = document.getElementById('recCancel');
 const modeRead  = document.getElementById('modeRead');
 const modeListen= document.getElementById('modeListen');
+const sfxToggle = document.getElementById('sfxToggle');
 const bgVideo   = document.getElementById('bgVideo');
 
 const AVATAR_SRC = 'assets/avatar.jpg';
@@ -66,6 +67,61 @@ function ensureCtx() {
 ['pointerdown', 'keydown'].forEach((ev) =>
   window.addEventListener(ev, ensureCtx, { once: true }));
 
+/* ====================== EFECTOS DE SONIDO ====================== */
+// Sonidos sutiles sintetizados en tiempo real (sin archivos). Se pueden silenciar.
+let sfxOn = (localStorage.getItem('cmpl_sfx') ?? '1') === '1';
+let sfxGain = null;
+function sfxBus() {
+  ensureCtx();
+  if (!audioCtx) return null;
+  if (!sfxGain) { sfxGain = audioCtx.createGain(); sfxGain.gain.value = 1; sfxGain.connect(audioCtx.destination); }
+  return sfxGain;
+}
+// Una nota con envolvente suave (ataque y caída exponencial).
+function tone(freq, { delay = 0, dur = 0.18, type = 'sine', gain = 0.1, freqEnd = null } = {}) {
+  if (!sfxOn) return;
+  const bus = sfxBus();
+  if (!bus) return;
+  const t = audioCtx.currentTime + delay;
+  const osc = audioCtx.createOscillator();
+  const g = audioCtx.createGain();
+  osc.type = type;
+  osc.frequency.setValueAtTime(freq, t);
+  if (freqEnd) osc.frequency.exponentialRampToValueAtTime(freqEnd, t + dur);
+  g.gain.setValueAtTime(0.0001, t);
+  g.gain.exponentialRampToValueAtTime(gain, t + 0.012);
+  g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+  osc.connect(g); g.connect(bus);
+  osc.start(t); osc.stop(t + dur + 0.03);
+}
+// Sonidos concretos:
+const sfx = {
+  intro()   { tone(659.25, { dur: 0.45, gain: 0.09 });                       // E5
+              tone(987.77, { delay: 0.09, dur: 0.5, gain: 0.07 });           // B5
+              tone(1318.5, { delay: 0.18, dur: 0.55, gain: 0.05, type: 'triangle' }); }, // E6 chispa
+  recStart(){ tone(520, { dur: 0.14, gain: 0.09, freqEnd: 780 }); },         // blip ascendente
+  recCancel(){ tone(420, { dur: 0.14, gain: 0.08, freqEnd: 240 }); },        // blip descendente
+  send()    { tone(300, { dur: 0.1, gain: 0.09, freqEnd: 200, type: 'triangle' }); }, // pop al enviar
+  receive() { tone(660, { dur: 0.12, gain: 0.09 });                          // dos notas suaves
+              tone(880, { delay: 0.1, dur: 0.16, gain: 0.08 }); },
+};
+
+// Botón para silenciar / activar los efectos
+const ICON_SFX_ON  = '<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M4 9v6h4l5 5V4L8 9H4Z"/><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" d="M16 8.5a5 5 0 0 1 0 7M18.7 6a8 8 0 0 1 0 12"/></svg>';
+const ICON_SFX_OFF = '<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M4 9v6h4l5 5V4L8 9H4Z"/><path fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" d="M16.5 9.5l5 5M21.5 9.5l-5 5"/></svg>';
+function applySfxIcon() {
+  sfxToggle.innerHTML = sfxOn ? ICON_SFX_ON : ICON_SFX_OFF;
+  sfxToggle.setAttribute('aria-pressed', String(sfxOn));
+  sfxToggle.setAttribute('aria-label', sfxOn ? 'Silenciar efectos de sonido' : 'Activar efectos de sonido');
+}
+sfxToggle.addEventListener('click', () => {
+  sfxOn = !sfxOn;
+  localStorage.setItem('cmpl_sfx', sfxOn ? '1' : '0');
+  applySfxIcon();
+  if (sfxOn) sfx.recStart(); // breve confirmación al activar
+});
+applySfxIcon();
+
 function connectAudio(el) {
   ensureCtx();
   if (!audioCtx || connected.has(el)) return;
@@ -117,6 +173,7 @@ function loop() {
 
 /* ---------- Intro ---------- */
 window.addEventListener('load', () => {
+  sfx.intro(); // sonido al abrir y aparecer el logo (si el navegador lo permite)
   setTimeout(() => {
     intro.classList.add('hide');
     app.setAttribute('aria-hidden', 'false');
@@ -129,6 +186,7 @@ function saludoInicial() {
   const typing = showTyping();
   setTimeout(() => {
     typing.remove();
+    sfx.receive();
     addBubble(
       'Hola, qué bueno que estás aquí. Soy Mia, tu amiga de Complicadas. ' +
       'Puedes escribirme o mandarme una nota de voz, y elegir arriba si prefieres ' +
@@ -208,6 +266,7 @@ form.addEventListener('submit', async (e) => {
   if (!text) return;
 
   addBubble(text, 'user');
+  sfx.send();
   history.push({ role: 'user', content: text });
   resetInput();
   setBusy(true);
@@ -225,6 +284,7 @@ form.addEventListener('submit', async (e) => {
 
     const reply = (data.reply || '').trim() ||
       'Perdona, me quedé sin palabras un momento. ¿Me lo cuentas otra vez?';
+    sfx.receive();
     addBubble(reply, 'bot', { audioBase64: listenMode ? data.audio : null });
     history.push({ role: 'assistant', content: reply });
   } catch (err) {
@@ -264,6 +324,7 @@ async function startRecording() {
     return;
   }
   cancelled = false; chunks = [];
+  sfx.recStart();
   const mime = pickMime();
   mediaRecorder = new MediaRecorder(mediaStream, mime ? { mimeType: mime } : undefined);
   mediaRecorder.ondataavailable = (e) => { if (e.data.size) chunks.push(e.data); };
@@ -292,11 +353,12 @@ function stopRecording(cancel) {
 async function handleRecordingStop() {
   showRecBar(false);
   if (mediaStream) mediaStream.getTracks().forEach((t) => t.stop());
-  if (cancelled || !chunks.length) return;
+  if (cancelled || !chunks.length) { sfx.recCancel(); return; }
 
   const type = mediaRecorder.mimeType || 'audio/webm';
   const base64 = await blobToBase64(new Blob(chunks, { type }));
 
+  sfx.send();
   const placeholder = addBubble('Transcribiendo tu nota de voz…', 'user', { voice: true });
   setBusy(true);
   const typing = showTyping();
@@ -316,6 +378,7 @@ async function handleRecordingStop() {
 
     const reply = (data.reply || '').trim();
     if (reply) {
+      sfx.receive();
       addBubble(reply, 'bot', { audioBase64: listenMode ? data.audio : null });
       history.push({ role: 'assistant', content: reply });
     }
