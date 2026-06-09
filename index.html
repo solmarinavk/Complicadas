@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#ffefd6" />
   <title>Complicadas — Tu amiga que te orienta</title>
   <meta name="description" content="Complicadas: tu amiga de confianza para resolver dudas del día a día, incluso esos temas de los que cuesta hablar." />
-  <link rel="icon" href="assets/avatar.svg" type="image/svg+xml" />
+  <link rel="icon" href="assets/avatar.jpg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
@@ -16,21 +16,34 @@
 
   <!-- ===== Pantalla de introducción ===== -->
   <div id="intro" class="intro">
-    <img id="introLogo" class="intro-logo" src="assets/logo.svg" alt="Complicadas" />
-    <img id="introAvatar" class="intro-avatar" src="assets/avatar.svg" alt="Avatar de Complicadas" />
+    <img id="introLogo" class="intro-logo" src="assets/logo.png" alt="Complicadas" />
+    <img id="introAvatar" class="intro-avatar" src="assets/avatar.jpg" alt="Avatar de Complicadas" />
   </div>
 
   <!-- ===== App de chat ===== -->
   <main id="app" class="app" aria-hidden="true">
     <header class="chat-header">
-      <img class="header-avatar" src="assets/avatar.svg" alt="Avatar de Complicadas" />
+      <img class="header-avatar" src="assets/avatar.jpg" alt="Avatar de Complicadas" />
       <div class="header-info">
-        <img class="header-logo" src="assets/logo.svg" alt="Complicadas" />
+        <img class="header-logo" src="assets/logo.png" alt="Complicadas" />
         <span class="header-status"><span class="dot"></span> En línea</span>
       </div>
     </header>
 
     <section id="messages" class="messages" aria-live="polite"></section>
+
+    <!-- Barra de grabación (oculta hasta que se graba una nota de voz) -->
+    <div id="recBar" class="rec-bar" hidden>
+      <button id="recCancel" class="rec-cancel" type="button" aria-label="Cancelar grabación">
+        <svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>
+      </button>
+      <span class="rec-pulse"></span>
+      <span id="recTime" class="rec-time">0:00</span>
+      <span class="rec-hint">Grabando nota de voz…</span>
+      <button id="recStop" class="rec-stop" type="button" aria-label="Enviar nota de voz">
+        <svg viewBox="0 0 24 24" width="22" height="22"><path fill="currentColor" d="M3 11.5 21 3l-8.5 18-2.2-7.3L3 11.5Z"/></svg>
+      </button>
+    </div>
 
     <form id="composer" class="composer" autocomplete="off">
       <textarea
@@ -41,6 +54,15 @@
         aria-label="Escribe tu mensaje"
         enterkeyhint="send"
       ></textarea>
+
+      <!-- Botón de micrófono: graba una nota de voz -->
+      <button id="mic" class="composer-mic" type="button" aria-label="Grabar nota de voz">
+        <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+          <path fill="currentColor" d="M12 14a3 3 0 0 0 3-3V6a3 3 0 0 0-6 0v5a3 3 0 0 0 3 3Z"/>
+          <path fill="currentColor" d="M19 11a1 1 0 0 0-2 0 5 5 0 0 1-10 0 1 1 0 0 0-2 0 7 7 0 0 0 6 6.92V21a1 1 0 0 0 2 0v-3.08A7 7 0 0 0 19 11Z"/>
+        </svg>
+      </button>
+
       <button id="send" class="composer-send" type="submit" aria-label="Enviar">
         <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
           <path fill="currentColor" d="M3 11.5 21 3l-8.5 18-2.2-7.3L3 11.5Z"/>

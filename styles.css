@@ -247,6 +247,78 @@ img { max-width: 100%; display: block; }
 }
 .composer-send:active { transform: scale(0.92); }
 .composer-send:disabled { opacity: 0.5; cursor: default; }
+.composer-send[hidden] { display: none; }
+
+/* ---- Botón de micrófono ---- */
+.composer-mic {
+  flex-shrink: 0;
+  width: 48px; height: 48px;
+  border: none;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--rosa), var(--rojo));
+  color: #fff;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: transform 0.15s ease, opacity 0.15s ease;
+}
+.composer-mic:active { transform: scale(0.92); }
+.composer-mic:disabled { opacity: 0.5; cursor: default; }
+.composer-mic[hidden] { display: none; }
+
+/* ---- Barra de grabación ---- */
+.rec-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: clamp(10px, 2.5vw, 14px) clamp(12px, 3vw, 18px);
+  padding-bottom: calc(clamp(10px, 2.5vw, 14px) + env(safe-area-inset-bottom));
+  background: #fff;
+  border-top: 1px solid rgba(245, 14, 36, 0.08);
+}
+.rec-bar[hidden] { display: none; }
+.rec-pulse {
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  background: var(--rojo);
+  animation: recPulse 1s infinite ease-in-out;
+  flex-shrink: 0;
+}
+@keyframes recPulse {
+  0%, 100% { transform: scale(0.8); opacity: 0.6; }
+  50% { transform: scale(1.1); opacity: 1; }
+}
+.rec-time { font-variant-numeric: tabular-nums; font-weight: 600; color: var(--rojo); }
+.rec-hint { color: var(--gris); font-size: 14px; flex: 1; }
+.rec-cancel, .rec-stop {
+  flex-shrink: 0;
+  width: 44px; height: 44px;
+  border: none;
+  border-radius: 50%;
+  display: grid; place-items: center;
+  cursor: pointer;
+}
+.rec-cancel { background: var(--crema); color: var(--gris); }
+.rec-stop { background: linear-gradient(135deg, var(--rojo), var(--naranja)); color: #fff; }
+.rec-cancel:active, .rec-stop:active { transform: scale(0.92); }
+
+/* ---- Etiqueta y reproductor de notas de voz ---- */
+.voice-tag {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  opacity: 0.65;
+  margin-bottom: 4px;
+}
+.voice-player {
+  display: block;
+  margin-top: 10px;
+  width: 100%;
+  min-width: 200px;
+  height: 38px;
+}
 
 /* ---- Scrollbar sutil ---- */
 .messages::-webkit-scrollbar { width: 6px; }
