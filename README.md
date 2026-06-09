@@ -4,10 +4,18 @@ Tu amiga que te orienta. Un chatbot cálido y de confianza, pensado sobre todo
 para mujeres, que ayuda a resolver dudas del día a día y temas tabú de los que
 cuesta hablar. Sin emojis, con cercanía y delicadeza.
 
-Al abrir el link aparece primero el **logo**, luego el **avatar** (la foto de
-perfil de la bot), y la conversación arranca con la ilusión de que estás hablando
-con ella. Puedes escribirle **o mandarle notas de voz**: ella transcribe lo que
-dices, te responde en texto y además te contesta con una **nota de voz**.
+Al abrir el link aparece primero el **logo**, luego el **avatar**, y entras a una
+experiencia inmersiva: **la chica queda de fondo** y el chat flota encima
+(responsive en cualquier dispositivo).
+
+Puedes elegir cómo conversar:
+- **Escribir** o mandar **notas de voz** (botón de micrófono).
+- **Leer** o **Escuchar** las respuestas (toggle arriba a la derecha).
+
+Cuando eliges *Escuchar*, la respuesta llega como nota de voz y **la chica del
+fondo parece hablar**: usando la Web Audio API se analiza la amplitud de su voz
+en tiempo real para animar su imagen, un aura y unas ondas de sonido, sincronizado
+con lo que dice.
 
 ---
 
@@ -19,7 +27,8 @@ dices, te responde en texto y además te contesta con una **nota de voz**.
 ├── styles.css              # Estilos (responsive + paleta de marca)
 ├── script.js               # Lógica del front (texto + grabación de voz)
 ├── assets/
-│   ├── avatar.jpg          # Foto de perfil de la bot (la chica)
+│   ├── avatar.jpg          # Foto de perfil (cuadrada, para la intro)
+│   ├── avatar-bg.jpg       # La chica de fondo (vertical, pantalla completa)
 │   └── logo.png            # Logo "complicadas" (fondo transparente)
 ├── netlify/
 │   └── functions/

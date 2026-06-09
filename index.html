@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <meta name="theme-color" content="#ffefd6" />
+  <meta name="theme-color" content="#2a0a12" />
   <title>Complicadas — Tu amiga que te orienta</title>
   <meta name="description" content="Complicadas: tu amiga de confianza para resolver dudas del día a día, incluso esos temas de los que cuesta hablar." />
   <link rel="icon" href="assets/avatar.jpg" />
@@ -20,55 +20,75 @@
     <img id="introAvatar" class="intro-avatar" src="assets/avatar.jpg" alt="Avatar de Complicadas" />
   </div>
 
-  <!-- ===== App de chat ===== -->
+  <!-- ===== App ===== -->
   <main id="app" class="app" aria-hidden="true">
-    <header class="chat-header">
-      <img class="header-avatar" src="assets/avatar.jpg" alt="Avatar de Complicadas" />
-      <div class="header-info">
-        <img class="header-logo" src="assets/logo.png" alt="Complicadas" />
-        <span class="header-status"><span class="dot"></span> En línea</span>
+
+    <!-- Fondo: la chica + capas de "habla" -->
+    <div class="stage">
+      <div class="bg-avatar"></div>
+      <div class="bg-overlay"></div>
+      <div class="speak-aura" aria-hidden="true"></div>
+
+      <header class="top-bar">
+        <img class="top-logo" src="assets/logo.png" alt="Complicadas" />
+
+        <div class="mode-toggle" role="group" aria-label="Modo de respuesta">
+          <button id="modeRead"  class="mode-btn" type="button" aria-pressed="false">
+            <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M4 5h16v2H4zm0 6h16v2H4zm0 6h10v2H4z"/></svg>
+            Leer
+          </button>
+          <button id="modeListen" class="mode-btn active" type="button" aria-pressed="true">
+            <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M14 3.2v2.1a7 7 0 0 1 0 13.4v2.1a9 9 0 0 0 0-17.6ZM3 9v6h4l5 5V4L7 9H3Zm11 .3v5.4a3 3 0 0 0 0-5.4Z"/></svg>
+            Escuchar
+          </button>
+        </div>
+      </header>
+
+      <!-- Indicador de "hablando" (ondas) -->
+      <div id="speakWave" class="speak-wave" hidden aria-hidden="true">
+        <span></span><span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span><span></span>
+        <em>Hablando…</em>
       </div>
-    </header>
-
-    <section id="messages" class="messages" aria-live="polite"></section>
-
-    <!-- Barra de grabación (oculta hasta que se graba una nota de voz) -->
-    <div id="recBar" class="rec-bar" hidden>
-      <button id="recCancel" class="rec-cancel" type="button" aria-label="Cancelar grabación">
-        <svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>
-      </button>
-      <span class="rec-pulse"></span>
-      <span id="recTime" class="rec-time">0:00</span>
-      <span class="rec-hint">Grabando nota de voz…</span>
-      <button id="recStop" class="rec-stop" type="button" aria-label="Enviar nota de voz">
-        <svg viewBox="0 0 24 24" width="22" height="22"><path fill="currentColor" d="M3 11.5 21 3l-8.5 18-2.2-7.3L3 11.5Z"/></svg>
-      </button>
     </div>
 
-    <form id="composer" class="composer" autocomplete="off">
-      <textarea
-        id="input"
-        class="composer-input"
-        rows="1"
-        placeholder="Escribe tu mensaje..."
-        aria-label="Escribe tu mensaje"
-        enterkeyhint="send"
-      ></textarea>
+    <!-- Panel de chat flotante -->
+    <section class="panel">
+      <div id="messages" class="messages" aria-live="polite"></div>
 
-      <!-- Botón de micrófono: graba una nota de voz -->
-      <button id="mic" class="composer-mic" type="button" aria-label="Grabar nota de voz">
-        <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
-          <path fill="currentColor" d="M12 14a3 3 0 0 0 3-3V6a3 3 0 0 0-6 0v5a3 3 0 0 0 3 3Z"/>
-          <path fill="currentColor" d="M19 11a1 1 0 0 0-2 0 5 5 0 0 1-10 0 1 1 0 0 0-2 0 7 7 0 0 0 6 6.92V21a1 1 0 0 0 2 0v-3.08A7 7 0 0 0 19 11Z"/>
-        </svg>
-      </button>
+      <!-- Barra de grabación (oculta hasta grabar) -->
+      <div id="recBar" class="rec-bar" hidden>
+        <button id="recCancel" class="rec-cancel" type="button" aria-label="Cancelar grabación">
+          <svg viewBox="0 0 24 24" width="20" height="20"><path stroke="currentColor" stroke-width="2.5" stroke-linecap="round" d="M6 6l12 12M18 6L6 18"/></svg>
+        </button>
+        <span class="rec-pulse"></span>
+        <span id="recTime" class="rec-time">0:00</span>
+        <span class="rec-hint">Grabando nota de voz…</span>
+        <button id="recStop" class="rec-stop" type="button" aria-label="Enviar nota de voz">
+          <svg viewBox="0 0 24 24" width="22" height="22"><path fill="currentColor" d="M3 11.5 21 3l-8.5 18-2.2-7.3L3 11.5Z"/></svg>
+        </button>
+      </div>
 
-      <button id="send" class="composer-send" type="submit" aria-label="Enviar">
-        <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
-          <path fill="currentColor" d="M3 11.5 21 3l-8.5 18-2.2-7.3L3 11.5Z"/>
-        </svg>
-      </button>
-    </form>
+      <form id="composer" class="composer" autocomplete="off">
+        <textarea
+          id="input" class="composer-input" rows="1"
+          placeholder="Escribe tu mensaje..."
+          aria-label="Escribe tu mensaje" enterkeyhint="send"></textarea>
+
+        <button id="mic" class="composer-mic" type="button" aria-label="Grabar nota de voz">
+          <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+            <path fill="currentColor" d="M12 14a3 3 0 0 0 3-3V6a3 3 0 0 0-6 0v5a3 3 0 0 0 3 3Z"/>
+            <path fill="currentColor" d="M19 11a1 1 0 0 0-2 0 5 5 0 0 1-10 0 1 1 0 0 0-2 0 7 7 0 0 0 6 6.92V21a1 1 0 0 0 2 0v-3.08A7 7 0 0 0 19 11Z"/>
+          </svg>
+        </button>
+
+        <button id="send" class="composer-send" type="submit" aria-label="Enviar" hidden>
+          <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+            <path fill="currentColor" d="M3 11.5 21 3l-8.5 18-2.2-7.3L3 11.5Z"/>
+          </svg>
+        </button>
+      </form>
+    </section>
   </main>
 
   <script src="script.js"></script>

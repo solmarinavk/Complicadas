@@ -42,13 +42,16 @@ exports.handler = async (event) => {
     const history = Array.isArray(messages) ? messages : [];
     const reply = await chatCompletion([...history, { role: 'user', content: transcript }]);
 
-    // 3) Respuesta -> audio
+    // 3) Respuesta -> audio (solo si el usuario eligió "Escuchar")
+    const speak = body.speak !== false;
     let speech = null;
-    try {
-      speech = await synthesizeSpeech(reply);
-    } catch (e) {
-      // Si falla solo la voz, igual devolvemos el texto.
-      console.error('TTS falló, devuelvo solo texto:', e);
+    if (speak && reply) {
+      try {
+        speech = await synthesizeSpeech(reply);
+      } catch (e) {
+        // Si falla solo la voz, igual devolvemos el texto.
+        console.error('TTS falló, devuelvo solo texto:', e);
+      }
     }
 
     return json(200, { transcript, reply, audio: speech });
