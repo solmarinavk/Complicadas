@@ -38,10 +38,18 @@
       <header class="top-bar">
         <div class="identity">
           <img class="top-logo" src="assets/logo.png" alt="Complicadas" />
-          <span class="who"><span class="dot"></span> Mia · En línea</span>
+          <span class="who">
+            <span class="dot"></span> Mia · <span id="statusText">En línea</span>
+          </span>
         </div>
+      </header>
+    </div>
 
-        <div class="top-actions">
+    <!-- Panel de chat flotante -->
+    <section class="panel">
+
+      <!-- Controles, justo encima del chat (para no tapar su cara) -->
+      <div class="panel-header">
         <button id="sfxToggle" class="sfx-btn" type="button" aria-pressed="true" aria-label="Silenciar efectos de sonido"></button>
         <div class="mode-toggle" role="group" aria-label="Modo de respuesta">
           <button id="modeRead"  class="mode-btn" type="button" aria-pressed="false">
@@ -53,17 +61,8 @@
             Escuchar
           </button>
         </div>
-        </div>
-      </header>
-
-      <div class="speaking-chip" aria-hidden="true">
-        <span class="bars"><i></i><i></i><i></i><i></i></span>
-        Hablando
       </div>
-    </div>
 
-    <!-- Panel de chat flotante -->
-    <section class="panel">
       <div id="messages" class="messages" aria-live="polite"></div>
 
       <!-- Barra de grabación (oculta hasta grabar) -->

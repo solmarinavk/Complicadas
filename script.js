@@ -14,6 +14,7 @@ const recCancel = document.getElementById('recCancel');
 const modeRead  = document.getElementById('modeRead');
 const modeListen= document.getElementById('modeListen');
 const sfxToggle = document.getElementById('sfxToggle');
+const statusText= document.getElementById('statusText');
 const bgVideo   = document.getElementById('bgVideo');
 
 const AVATAR_SRC = 'assets/avatar.jpg';
@@ -150,12 +151,14 @@ function registerBotAudio(el) {
 
 function startSpeaking() {
   document.body.classList.add('speaking');
+  if (statusText) statusText.textContent = 'Hablando…';
   if (bgVideo) { bgVideo.play().catch(() => {}); }  // el video está muteado: se permite reproducir
   if (!rafId) loop();
 }
 function stopSpeaking() {
   if (activeAudios > 0) return;                      // sigue sonando otra nota
   document.body.classList.remove('speaking');
+  if (statusText) statusText.textContent = 'En línea';
   if (bgVideo) { try { bgVideo.pause(); bgVideo.currentTime = 0; } catch {} }
   if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
   document.documentElement.style.setProperty('--level', '0');
