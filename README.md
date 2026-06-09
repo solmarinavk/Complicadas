@@ -12,10 +12,11 @@ Puedes elegir cómo conversar:
 - **Escribir** o mandar **notas de voz** (botón de micrófono).
 - **Leer** o **Escuchar** las respuestas (toggle arriba a la derecha).
 
-Cuando eliges *Escuchar*, la respuesta llega como nota de voz y **la chica del
-fondo parece hablar**: usando la Web Audio API se analiza la amplitud de su voz
-en tiempo real para animar su imagen, un aura y unas ondas de sonido, sincronizado
-con lo que dice.
+Cuando eliges *Escuchar*, la respuesta llega como nota de voz y **un video de Mia
+hablando se reproduce de fondo** mientras suena su voz (se pausa al terminar). El
+video va silenciado: el sonido es la voz generada por OpenAI. Además, un aura sutil
+pulsa con la amplitud de su voz (Web Audio API) para reforzar la sensación de que
+te está hablando.
 
 ---
 
@@ -28,8 +29,12 @@ con lo que dice.
 ├── script.js               # Lógica del front (texto + grabación de voz)
 ├── assets/
 │   ├── avatar.jpg          # Foto de perfil (cuadrada, para la intro)
-│   ├── avatar-bg.jpg       # La chica de fondo (vertical, pantalla completa)
-│   └── logo.png            # Logo "complicadas" (fondo transparente)
+│   ├── avatar-bg.jpg       # Póster del video (se ve cuando Mia no habla)
+│   ├── mia-talking.mp4     # Video de Mia hablando (loop, silenciado)
+│   ├── mia-talking.webm    # Misma versión en WebM (mejor compresión)
+│   ├── logo.png            # Logo "complicadas" (fondo transparente)
+│   ├── favicon.png         # Ícono de la pestaña (logo en tile)
+│   └── favicon-32.png      # Ícono pequeño
 ├── netlify/
 │   └── functions/
 │       ├── chat.js         # Endpoint de TEXTO

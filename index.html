@@ -6,7 +6,9 @@
   <meta name="theme-color" content="#2a0a12" />
   <title>Complicadas — Tu amiga que te orienta</title>
   <meta name="description" content="Complicadas: tu amiga de confianza para resolver dudas del día a día, incluso esos temas de los que cuesta hablar." />
-  <link rel="icon" href="assets/avatar.jpg" />
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png" />
+  <link rel="icon" type="image/png" sizes="512x512" href="assets/favicon.png" />
+  <link rel="apple-touch-icon" href="assets/favicon.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
@@ -23,9 +25,13 @@
   <!-- ===== App ===== -->
   <main id="app" class="app" aria-hidden="true">
 
-    <!-- Fondo: la chica + capas de "habla" -->
+    <!-- Fondo: la chica (video que habla) + capas -->
     <div class="stage">
-      <div class="bg-avatar"></div>
+      <video id="bgVideo" class="bg-avatar" poster="assets/avatar-bg.jpg"
+             muted loop playsinline preload="auto" aria-hidden="true">
+        <source src="assets/mia-talking.webm" type="video/webm" />
+        <source src="assets/mia-talking.mp4" type="video/mp4" />
+      </video>
       <div class="bg-overlay"></div>
       <div class="speak-aura" aria-hidden="true"></div>
 
@@ -47,11 +53,9 @@
         </div>
       </header>
 
-      <!-- Indicador de "hablando" (ondas) -->
-      <div id="speakWave" class="speak-wave" hidden aria-hidden="true">
-        <span></span><span></span><span></span><span></span><span></span>
-        <span></span><span></span><span></span><span></span><span></span>
-        <em>Hablando…</em>
+      <div class="speaking-chip" aria-hidden="true">
+        <span class="bars"><i></i><i></i><i></i><i></i></span>
+        Hablando
       </div>
     </div>
 

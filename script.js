@@ -13,8 +13,7 @@ const recStop   = document.getElementById('recStop');
 const recCancel = document.getElementById('recCancel');
 const modeRead  = document.getElementById('modeRead');
 const modeListen= document.getElementById('modeListen');
-const speakWave = document.getElementById('speakWave');
-const bgAvatar  = document.querySelector('.bg-avatar');
+const bgVideo   = document.getElementById('bgVideo');
 
 const AVATAR_SRC = 'assets/avatar.jpg';
 const MAX_REC_MS = 90000;
@@ -43,8 +42,9 @@ modeRead.addEventListener('click',   () => { listenMode = false; localStorage.se
 applyMode();
 
 /* ====================== MOTOR DE "HABLA" ====================== */
-// Analiza el audio de la voz en tiempo real (Web Audio API) y con la amplitud
-// anima el fondo: la chica se mueve sutilmente, se enciende un aura y unas ondas.
+// Mientras suena una nota de voz, reproduce el VIDEO de Mia hablando.
+// Además, con la Web Audio API mide la amplitud para encender un aura sutil
+// sincronizada con su voz. Al terminar, el video se pausa en su primer cuadro.
 let audioCtx = null, analyser = null, freqBuf = null, rafId = null, activeAudios = 0;
 const connected = new WeakSet();
 
@@ -94,16 +94,15 @@ function registerBotAudio(el) {
 
 function startSpeaking() {
   document.body.classList.add('speaking');
-  speakWave.hidden = false;
+  if (bgVideo) { bgVideo.play().catch(() => {}); }  // el video está muteado: se permite reproducir
   if (!rafId) loop();
 }
 function stopSpeaking() {
-  if (activeAudios > 0) return;
+  if (activeAudios > 0) return;                      // sigue sonando otra nota
   document.body.classList.remove('speaking');
-  speakWave.hidden = true;
+  if (bgVideo) { try { bgVideo.pause(); bgVideo.currentTime = 0; } catch {} }
   if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
   document.documentElement.style.setProperty('--level', '0');
-  bgAvatar.style.transform = ''; // retoma la respiración suave
 }
 function loop() {
   rafId = requestAnimationFrame(loop);
@@ -112,9 +111,8 @@ function loop() {
   let sum = 0;
   for (let i = 0; i < freqBuf.length; i++) sum += freqBuf[i];
   const avg = sum / freqBuf.length / 255;        // 0..1
-  const level = Math.min(1, avg * 2.4);          // amplificado
+  const level = Math.min(1, avg * 2.4);          // amplificado para el aura
   document.documentElement.style.setProperty('--level', level.toFixed(3));
-  bgAvatar.style.transform = `scale(${(1 + level * 0.03).toFixed(4)}) translateY(${(level * -0.9).toFixed(2)}%)`;
 }
 
 /* ---------- Intro ---------- */

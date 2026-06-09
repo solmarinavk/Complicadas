@@ -92,11 +92,16 @@ img { display: block; max-width: 100%; }
 
 .bg-avatar {
   position: absolute; inset: -5%;
-  background: url('assets/avatar-bg.jpg') center 14% / cover no-repeat;
+  width: 110%; height: 110%;
+  object-fit: cover; object-position: center 14%;
   transform-origin: center 22%;
   will-change: transform;
+  background: #1a060c;
 }
+/* Respiración sutil cuando NO está hablando (con el video pausado);
+   al hablar, el movimiento real del video toma el protagonismo. */
 .app.show .bg-avatar { animation: breathe 6s ease-in-out infinite; }
+body.speaking .bg-avatar { animation: none; }
 @keyframes breathe { 0%,100% { transform: scale(1.0); } 50% { transform: scale(1.018); } }
 
 .bg-overlay {
@@ -157,38 +162,31 @@ body.speaking .speak-aura { opacity: calc(0.45 + var(--level) * 0.55); }
   box-shadow: 0 4px 14px rgba(245,14,36,0.45);
 }
 
-/* ---- Ondas de "hablando" ---- */
-.speak-wave {
-  position: absolute; left: 50%; top: 25%;
-  transform: translateX(-50%) scaleY(calc(0.35 + var(--level) * 0.9));
-  transform-origin: center bottom;
+/* Chip "Hablando" mientras suena la voz */
+.speaking-chip {
+  position: absolute; left: 50%; top: 16px;
+  transform: translateX(-50%) translateY(-8px);
   z-index: 3;
-  display: flex; align-items: flex-end; gap: 3px; height: 40px;
-  padding: 10px 16px; border-radius: 999px;
-  background: rgba(18,3,9,0.35);
-  -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+  display: flex; align-items: center; gap: 8px;
+  padding: 7px 14px 7px 12px; border-radius: 999px;
+  background: rgba(18,3,9,0.42);
+  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.16);
+  color: #fff; font-size: 12px; font-weight: 600;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.3s ease, transform 0.3s ease;
 }
-.speak-wave[hidden] { display: none; }
-.speak-wave span {
-  width: 4px; height: 30%; border-radius: 4px;
+body.speaking .speaking-chip { opacity: 1; transform: translateX(-50%) translateY(0); }
+.speaking-chip .bars { display: flex; align-items: flex-end; gap: 2px; height: 12px; }
+.speaking-chip .bars i {
+  width: 3px; height: 30%; border-radius: 2px; display: block;
   background: linear-gradient(to top, var(--rosa), var(--naranja));
   animation: waveBar 0.9s ease-in-out infinite;
 }
-.speak-wave span:nth-child(1){animation-delay:0s}
-.speak-wave span:nth-child(2){animation-delay:.12s}
-.speak-wave span:nth-child(3){animation-delay:.24s}
-.speak-wave span:nth-child(4){animation-delay:.36s}
-.speak-wave span:nth-child(5){animation-delay:.18s}
-.speak-wave span:nth-child(6){animation-delay:.30s}
-.speak-wave span:nth-child(7){animation-delay:.06s}
-.speak-wave span:nth-child(8){animation-delay:.42s}
-.speak-wave span:nth-child(9){animation-delay:.20s}
-.speak-wave span:nth-child(10){animation-delay:.10s}
-.speak-wave em {
-  margin-left: 8px; align-self: center;
-  font-style: normal; font-size: 12px; font-weight: 600; color: #fff;
-}
-@keyframes waveBar { 0%,100% { height: 22%; } 50% { height: 95%; } }
+.speaking-chip .bars i:nth-child(2){animation-delay:.15s}
+.speaking-chip .bars i:nth-child(3){animation-delay:.30s}
+.speaking-chip .bars i:nth-child(4){animation-delay:.10s}
+@keyframes waveBar { 0%,100% { height: 25%; } 50% { height: 100%; } }
 
 /* ===================== PANEL DE CHAT ===================== */
 .panel {
@@ -314,9 +312,9 @@ body.speaking .speak-aura { opacity: calc(0.45 + var(--level) * 0.55); }
     border-top: none; border-left: 1px solid rgba(255,255,255,0.10);
   }
   .top-bar { right: 380px; }
-  .speak-wave { left: calc((100% - 380px) / 2); top: 30%; }
+  .speaking-chip { left: calc((100% - 380px) / 2); }
   .speak-aura { left: calc((100% - 380px) / 2); }
-  .bg-avatar { background-position: center 18%; }
+  .bg-avatar { object-position: center 18%; }
 }
 
 /* Móvil horizontal (poca altura): intro en fila y panel más alto */
