@@ -150,10 +150,13 @@ function registerBotAudio(el) {
   el.addEventListener('ended', onStop);
 }
 
+const POSTER_TIME = 10;   // segundo del video con la boca cerrada (reposo)
+let curRate = 1;
+
 function startSpeaking() {
   document.body.classList.add('speaking');
   if (statusText) statusText.textContent = 'Hablando…';
-  smoothLevel = 0; silenceSince = 0;
+  smoothLevel = 0; silenceSince = 0; curRate = 1;
   if (bgVideo) { try { bgVideo.playbackRate = 1; } catch {} bgVideo.play().catch(() => {}); }
   if (!rafId) loop();
 }
@@ -161,7 +164,8 @@ function stopSpeaking() {
   if (activeAudios > 0) return;                      // sigue sonando otra nota
   document.body.classList.remove('speaking');
   if (statusText) statusText.textContent = 'En línea';
-  if (bgVideo) { try { bgVideo.pause(); bgVideo.currentTime = 0; } catch {} }
+  // En reposo, deja la boca cerrada (fotograma del póster).
+  if (bgVideo) { try { bgVideo.pause(); bgVideo.currentTime = POSTER_TIME; } catch {} }
   if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
   document.documentElement.style.setProperty('--level', '0');
 }
@@ -173,19 +177,21 @@ function loop() {
   for (let i = 0; i < freqBuf.length; i++) sum += freqBuf[i];
   const avg = sum / freqBuf.length / 255;            // 0..1
   const level = Math.min(1, avg * 2.4);              // amplificado
-  smoothLevel += (level - smoothLevel) * 0.4;        // suavizado (EMA)
+  smoothLevel += (level - smoothLevel) * 0.35;       // suavizado (EMA)
   document.documentElement.style.setProperty('--level', smoothLevel.toFixed(3));
 
   // --- Sincronía con la voz ---
-  // La boca avanza al ritmo de la energía del audio y se congela en los silencios.
+  // La velocidad de la boca sigue la energía del audio (con transición suave),
+  // y en silencios largos se detiene en seco para que parezca que deja de hablar.
   if (bgVideo) {
-    const rate = 0.55 + smoothLevel * 0.95;          // ~0.55 (suave) .. ~1.5 (enérgico)
-    try { bgVideo.playbackRate = Math.max(0.5, Math.min(1.6, rate)); } catch {}
+    const target = 0.45 + smoothLevel * 1.05;        // ~0.45 (callado) .. ~1.5 (enérgico)
+    curRate += (target - curRate) * 0.12;            // easing: nada de saltos bruscos
+    try { bgVideo.playbackRate = Math.max(0.1, Math.min(1.6, curRate)); } catch {}
 
     const now = performance.now();
-    if (smoothLevel < 0.05) {                         // silencio
+    if (smoothLevel < 0.045) {                        // silencio
       if (!silenceSince) silenceSince = now;
-      if (now - silenceSince > 170 && !bgVideo.paused) bgVideo.pause(); // congela la boca
+      if (now - silenceSince > 420 && !bgVideo.paused) bgVideo.pause(); // pausa solo en pausas reales
     } else {                                          // hay voz
       silenceSince = 0;
       if (bgVideo.paused && document.body.classList.contains('speaking')) {
