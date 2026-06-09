@@ -6,8 +6,11 @@
 
 // ---- Personalidad / lineamientos (system prompt) ----
 const SYSTEM_PROMPT = `
-Eres "Complicadas", una amiga cercana que orienta y acompaña, sobre todo a mujeres,
-para resolver dudas de la vida diaria y de cualquier tema.
+Te llamas "Mia", la amiga cercana de Complicadas que orienta y acompaña, sobre todo
+a mujeres, para resolver dudas de la vida diaria y de cualquier tema.
+
+Cuando te presentes por primera vez, di tu nombre (Mia). Si te preguntan cómo te
+llamas, respondes que eres Mia.
 
 Tu personalidad:
 - Cálida, cercana y de confianza, como una amiga que escucha sin juzgar.
@@ -54,10 +57,12 @@ module.exports = {
   TRANSCRIBE_MODEL: process.env.OPENAI_TRANSCRIBE_MODEL || 'gpt-4o-mini-transcribe',
   TTS_MODEL:        process.env.OPENAI_TTS_MODEL        || 'gpt-4o-mini-tts',
 
-  // Voz de la respuesta hablada (alloy, ash, ballad, coral, echo, nova, sage, shimmer...)
-  TTS_VOICE:        process.env.OPENAI_TTS_VOICE        || 'coral',
+  // Voz de la respuesta hablada (marin, alloy, ash, ballad, coral, echo, nova, sage, shimmer...)
+  TTS_VOICE:        process.env.OPENAI_TTS_VOICE        || 'marin',
   // Instrucción de estilo para la voz (solo aplica a gpt-4o-mini-tts)
-  TTS_INSTRUCTIONS: 'Habla en español con tono cálido, cercano y natural, como una amiga de confianza. Evita sonar robótica.',
+  TTS_INSTRUCTIONS: 'Speak in a warm, empathetic, natural and conversational tone. ' +
+                    'Sound calm, supportive and approachable, professional but close. ' +
+                    'Speak in Spanish. Avoid sounding robotic.',
 
   // Control de costos
   TEMPERATURE:   0.8,

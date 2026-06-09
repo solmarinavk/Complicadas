@@ -132,7 +132,7 @@ function saludoInicial() {
   setTimeout(() => {
     typing.remove();
     addBubble(
-      'Hola, qué bueno que estás aquí. Soy tu amiga de Complicadas. ' +
+      'Hola, qué bueno que estás aquí. Soy Mia, tu amiga de Complicadas. ' +
       'Puedes escribirme o mandarme una nota de voz, y elegir arriba si prefieres ' +
       'leer o escuchar mis respuestas. Cuéntame lo que quieras, aquí no hay temas ' +
       'prohibidos. ¿Qué tienes en mente?',
