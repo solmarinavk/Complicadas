@@ -44,7 +44,7 @@ modeRead.addEventListener('click',   () => { listenMode = false; localStorage.se
 applyMode();
 
 /* ====================== MOTOR DE "HABLA" ====================== */
-// Mientras suena una nota de voz, reproduce el VIDEO de Mia hablando.
+// Mientras suena una nota de voz, reproduce el VIDEO de Artemisa hablando.
 // Además, con la Web Audio API mide la amplitud para encender un aura sutil
 // sincronizada con su voz. Al terminar, el video se pausa en su primer cuadro.
 let audioCtx = null, analyser = null, freqBuf = null, rafId = null, activeAudios = 0;
@@ -218,7 +218,7 @@ function saludoInicial() {
     typing.remove();
     sfx.receive();
     addBubble(
-      'Hola, qué bueno que estás aquí. Soy Mia, tu amiga de Complicadas. ' +
+      'Hola, qué bueno que estás aquí. Soy Artemisa, tu amiga de Complicadas. ' +
       'Puedes escribirme o mandarme una nota de voz, y elegir arriba si prefieres ' +
       'leer o escuchar mis respuestas. Cuéntame lo que quieras, aquí no hay temas ' +
       'prohibidos. ¿Qué tienes en mente?',

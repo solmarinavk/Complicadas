@@ -141,7 +141,7 @@ body.speaking .speak-aura { opacity: calc(0.45 + var(--level) * 0.55); }
   text-shadow: 0 1px 6px rgba(0,0,0,0.45);
 }
 .who .dot { width: 8px; height: 8px; border-radius: 50%; background: #6dffa0; box-shadow: 0 0 8px #6dffa0; flex-shrink: 0; }
-/* Cuando Mia habla, el punto late en color de marca */
+/* Cuando Artemisa habla, el punto late en color de marca */
 body.speaking .who .dot { background: var(--naranja); box-shadow: 0 0 10px var(--naranja); animation: dotPulse 0.9s ease-in-out infinite; }
 @keyframes dotPulse { 0%,100% { transform: scale(0.85); } 50% { transform: scale(1.25); } }
 

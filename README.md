@@ -16,7 +16,7 @@ Tiene **efectos de sonido sutiles** (al abrir, al grabar, al enviar y al recibir
 sintetizados en tiempo real con la Web Audio API. Se pueden silenciar con el botón
 de altavoz en la barra superior.
 
-Cuando eliges *Escuchar*, la respuesta llega como nota de voz y **un video de Mia
+Cuando eliges *Escuchar*, la respuesta llega como nota de voz y **un video de Artemisa
 hablando se reproduce de fondo** mientras suena su voz (se pausa al terminar). El
 video va silenciado: el sonido es la voz generada por OpenAI. Además, un aura sutil
 pulsa con la amplitud de su voz (Web Audio API) para reforzar la sensación de que
@@ -33,9 +33,9 @@ te está hablando.
 ├── script.js               # Lógica del front (texto + grabación de voz)
 ├── assets/
 │   ├── avatar.jpg          # Foto de perfil (cuadrada, para la intro)
-│   ├── avatar-bg.jpg       # Póster del video (se ve cuando Mia no habla)
-│   ├── mia-talking.mp4     # Video de Mia hablando (loop, silenciado)
-│   ├── mia-talking.webm    # Misma versión en WebM (mejor compresión)
+│   ├── avatar-bg.jpg          # Póster del video (se ve cuando Artemisa no habla)
+│   ├── artemisa-talking.mp4   # Video de Artemisa hablando (loop, silenciado)
+│   ├── artemisa-talking.webm  # Misma versión en WebM (mejor compresión)
 │   ├── logo.png            # Logo "complicadas" (fondo transparente)
 │   ├── favicon.png         # Ícono de la pestaña (logo en tile)
 │   └── favicon-32.png      # Ícono pequeño
