@@ -44,11 +44,11 @@ modeRead.addEventListener('click',   () => { listenMode = false; localStorage.se
 applyMode();
 
 /* ====================== MOTOR DE "HABLA" ====================== */
-// Mientras suena una nota de voz, reproduce el VIDEO de Artemisa hablando.
+// Mientras suena una nota de voz, reproduce el VIDEO de fondo de Artemisa.
 // Además, con la Web Audio API mide la amplitud para encender un aura sutil
-// sincronizada con su voz. Al terminar, el video se pausa en su primer cuadro.
+// sincronizada con su voz. Al terminar, vuelve a un fotograma de reposo.
 let audioCtx = null, analyser = null, freqBuf = null, rafId = null, activeAudios = 0;
-let smoothLevel = 0, silenceSince = 0;   // para sincronizar el video con la voz
+let smoothLevel = 0;                      // amplitud suavizada (para el aura)
 const connected = new WeakSet();
 
 function ensureCtx() {
@@ -150,13 +150,12 @@ function registerBotAudio(el) {
   el.addEventListener('ended', onStop);
 }
 
-const POSTER_TIME = 10;   // segundo del video con la boca cerrada (reposo)
-let curRate = 1;
+const POSTER_TIME = 27;   // fotograma de reposo (Artemisa de pie)
 
 function startSpeaking() {
   document.body.classList.add('speaking');
   if (statusText) statusText.textContent = 'Hablando…';
-  smoothLevel = 0; silenceSince = 0; curRate = 1;
+  smoothLevel = 0;
   if (bgVideo) { try { bgVideo.playbackRate = 1; } catch {} bgVideo.play().catch(() => {}); }
   if (!rafId) loop();
 }
@@ -164,7 +163,7 @@ function stopSpeaking() {
   if (activeAudios > 0) return;                      // sigue sonando otra nota
   document.body.classList.remove('speaking');
   if (statusText) statusText.textContent = 'En línea';
-  // En reposo, deja la boca cerrada (fotograma del póster).
+  // En reposo, vuelve a un fotograma de pie.
   if (bgVideo) { try { bgVideo.pause(); bgVideo.currentTime = POSTER_TIME; } catch {} }
   if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
   document.documentElement.style.setProperty('--level', '0');
@@ -178,27 +177,8 @@ function loop() {
   const avg = sum / freqBuf.length / 255;            // 0..1
   const level = Math.min(1, avg * 2.4);              // amplificado
   smoothLevel += (level - smoothLevel) * 0.35;       // suavizado (EMA)
+  // El aura pulsa con la amplitud de la voz mientras el video se reproduce.
   document.documentElement.style.setProperty('--level', smoothLevel.toFixed(3));
-
-  // --- Sincronía con la voz ---
-  // La velocidad de la boca sigue la energía del audio (con transición suave),
-  // y en silencios largos se detiene en seco para que parezca que deja de hablar.
-  if (bgVideo) {
-    const target = 0.45 + smoothLevel * 1.05;        // ~0.45 (callado) .. ~1.5 (enérgico)
-    curRate += (target - curRate) * 0.12;            // easing: nada de saltos bruscos
-    try { bgVideo.playbackRate = Math.max(0.1, Math.min(1.6, curRate)); } catch {}
-
-    const now = performance.now();
-    if (smoothLevel < 0.045) {                        // silencio
-      if (!silenceSince) silenceSince = now;
-      if (now - silenceSince > 420 && !bgVideo.paused) bgVideo.pause(); // pausa solo en pausas reales
-    } else {                                          // hay voz
-      silenceSince = 0;
-      if (bgVideo.paused && document.body.classList.contains('speaking')) {
-        bgVideo.play().catch(() => {});
-      }
-    }
-  }
 }
 
 /* ---------- Intro ---------- */
